@@ -7,7 +7,7 @@ set -eo pipefail
 # have included more than one build, depending
 # on the specific version of Mac OS X. Try to
 # account for that, but don't try too hard.
-# This doesn't affect Heroku builds, it's only
+# This doesn't affect builds, it's only
 # for testing on Darwin systems.
 platext() {
     case $1 in
@@ -68,8 +68,8 @@ then
     name=$(cat $build/.godir)
     ver=go${GOVERSION:-1.4.1}
 else
-    echo >&2 " !     A .godir is required. For instructions:"
-    echo >&2 " !     http://mmcgrana.github.io/2012/09/getting-started-with-go-on-heroku"
+    echo >&2 " !     Godeps or a .godir is required. For instructions:"
+    echo >&2 " !     http://doc.appsdeck.eu/languages/go"
     exit 1
 fi
 
@@ -99,7 +99,7 @@ fi
 mkdir -p $build/bin
 GOBIN=$build/bin export GOBIN
 GOROOT=$cache/$ver/go export GOROOT
-GOPATH=$build/.heroku/g export GOPATH
+GOPATH=$build/.scalingo/g export GOPATH
 PATH=$GOROOT/bin:$PATH
 
 
@@ -142,18 +142,25 @@ then
     done
 fi
 
+FLAGS=(-tags paas)
+if test -n "$GO_GIT_DESCRIBE_SYMBOL"
+then
+    git_describe=$(git describe --tags --always)
+    FLAGS=(${FLAGS[@]} -ldflags "-X $GO_GIT_DESCRIBE_SYMBOL $git_describe")
+fi
+
 unset GIT_DIR # unset git dir or it will mess with goinstall
 cd $p
 if test -e $build/Godeps
 then
-    echo "-----> Running: godep go install -tags heroku ./..."
+    echo "-----> Running: godep go install -tags paas ./..."
     godep go install -tags heroku ./...
 else
-    echo "-----> Running: go get -tags heroku ./..."
+    echo "-----> Running: go get -tags paas ./..."
     go get -tags heroku ./...
 fi
 
-rm -rf $build/.heroku
+rm -rf $build/.scalingo
 
 mkdir -p $build/.profile.d
 echo 'PATH=$PATH:$HOME/bin' > $build/.profile.d/go.sh
