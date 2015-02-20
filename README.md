@@ -5,7 +5,7 @@ This is a buildpack for [Go][go].
 ## Getting Started
 
 Follow the guide at
-<http://doc.appsdeck.eu/languages/go>.
+<http://doc.scalingo.eu/languages/go>.
 
 There's also a hello world sample app at
 <https://github.com/Scalingo/sample-go-martini>.
@@ -14,38 +14,34 @@ There's also a hello world sample app at
 
 ```
 $ ls -A1
-./.git
-./.godir
-./Procfile
-./web.go
+.git
+Godeps
+Procfile
+web.go
 
 $ scalingo create my-go-app
 $ git push scalingo master
 ...
-
-$ git push scalingo master
-...
 -----> Fetching custom git buildpack... done
 -----> Go app detected
------> Installing Go 1.0.3... done
-       Installing Virtualenv... done
-       Installing Mercurial... done
-       Installing Bazaar... done
------> Running: go get -tags paas ./...
+-----> Installing go1.4.2... done
+-----> Running: godep go install -tags paas ./...
 -----> Discovering process types
        Procfile declares types -> web
-       http://my-go-app.scalingo.io
+
+-----> Compressing... done, 1.6MB
+-----> Launching... done, v4
+       https://polar-waters-4785.herokuapp.com/ deployed to Heroku
 ```
 
-The buildpack will detect your repository as Go if it
-contains a `.go` file.
+This buildpack will detect your repository as Go if it contains a `.go` file.
 
 The buildpack adds a `paas` [build constraint][build-constraint],
 to enable Platform as a Service specific code. See the [App Engine build constraints article][app-engine-build-constraints]
 for more.
 
 [go]: http://golang.org/
-[quickstart]: http://doc.appsdeck.eu/languages/go/
+[quickstart]: http://doc.scalingo.com/languages/go/
 [build-constraint]: http://golang.org/pkg/go/build/
 [app-engine-build-constraints]: http://blog.golang.org/2013/01/the-app-engine-sdk-and-workspaces-gopath.html
 
