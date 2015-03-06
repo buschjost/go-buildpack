@@ -38,12 +38,12 @@ urlfor() {
 mkdir -p "$1" "$2"
 build=$(cd "$1/" && pwd)
 cache=$(cd "$2/" && pwd)
-<<<<<<< HEAD
 buildpack=$(dirname $(dirname $(readlink -nf $0)))
 arch=$(uname -m|tr A-Z a-z)
 if test $arch = x86_64
-then arch=amd64
+  then arch=amd64
 fi
+
 plat=$(uname|tr A-Z a-z)-$arch
 
 # Python
